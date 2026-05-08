@@ -1,0 +1,34 @@
+# --- Java / Spring (Backend) ---
+# Ignora a pasta de build do Maven dentro de backend
+backend/target/
+# Ignora binários e arquivos de execução do Maven
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+*.class
+*.jar
+*.war
+
+# --- Angular (Frontend) ---
+# Ignora as dependências pesadas e cache do Angular
+frontend/node_modules/
+frontend/.angular/
+# Ignora a pasta de build final do frontend
+frontend/dist/
+frontend/npm-debug.log*
+
+# --- IDEs (IntelliJ, VS Code, STS) ---
+.idea/
+backend/.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.classpath
+.project
+.settings/
+.sts4-cache/
+
+# --- Sistema Operacional ---
+Thumbs.db
+.DS_Store
