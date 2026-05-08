@@ -13,7 +13,9 @@ public class GlassMapper {
         return Glass.builder()
                 .id(entity.getId())
                 .type(entity.getType())
+                .description(entity.getDescription())
                 .pricePerSquareMeter(entity.getPricePerSquareMeter())
+                .technicalGapCm(entity.getTechnicalGapCm())
                 .build();
     }
 
@@ -23,7 +25,9 @@ public class GlassMapper {
         return GlassEntity.builder()
                 .id(model.getId())
                 .type(model.getType())
+                .description(model.getDescription())
                 .pricePerSquareMeter(model.getPricePerSquareMeter())
+                .technicalGapCm(model.getTechnicalGapCm())
                 .build();
     }
 }

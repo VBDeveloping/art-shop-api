@@ -1,6 +1,8 @@
 package br.com.vbartshop.art_shop_api.entrypoints.controller;
 
+import br.com.vbartshop.art_shop_api.entrypoints.dto.LoginRequest;
 import br.com.vbartshop.art_shop_api.infrastructure.security.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,27 +13,18 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
-    }
-
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
-        // Valida as credenciais contra o UserDetailsServiceImpl
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest request) {
         Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(credentials.get("email"), credentials.get("password"))
+                new UsernamePasswordAuthenticationToken(request.email(), request.password())
         );
-
-        // Se passou, agora usa o generateToken!
         String token = jwtUtil.generateToken(auth.getName());
-
-        // Retorna o token para o Angular 18 guardar no LocalStorage
         return ResponseEntity.ok(Map.of("token", token));
     }
 }

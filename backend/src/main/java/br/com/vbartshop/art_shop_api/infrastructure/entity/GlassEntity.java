@@ -19,6 +19,10 @@ public class GlassEntity {
     @Column(nullable = false)
     private String type;
 
+    private String description;
+
     @Column(precision = 10, scale = 2)
     private BigDecimal pricePerSquareMeter;
+
+    private Double technicalGapCm;
 }

@@ -15,7 +15,10 @@ public class FrameMapper {
                 .id(entity.getId())
                 .code(entity.getCode())
                 .name(entity.getName())
+                .material(entity.getMaterial())
+                .color(entity.getColor())
                 .faceWidthCm(entity.getFaceWidthCm())
+                .cuttingMarginCm(entity.getCuttingMarginCm())
                 .pricePerMeter(entity.getPricePerMeter())
                 .stockMeters(entity.getStockMeters())
                 .build();
@@ -29,7 +32,10 @@ public class FrameMapper {
                 .id(model.getId())
                 .code(model.getCode())
                 .name(model.getName())
+                .material(model.getMaterial())
+                .color(model.getColor())
                 .faceWidthCm(model.getFaceWidthCm())
+                .cuttingMarginCm(model.getCuttingMarginCm())
                 .pricePerMeter(model.getPricePerMeter())
                 .stockMeters(model.getStockMeters())
                 .build();

@@ -4,6 +4,7 @@ import br.com.vbartshop.art_shop_api.business.model.SystemUser;
 import br.com.vbartshop.art_shop_api.infrastructure.entity.UserEntity;
 import br.com.vbartshop.art_shop_api.infrastructure.mapper.UserMapper;
 import br.com.vbartshop.art_shop_api.infrastructure.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class UserService {
 
     private final UserRepository repository;
     private final UserMapper mapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public List<SystemUser> findAll() {
@@ -32,8 +34,9 @@ public class UserService {
             throw new RuntimeException("Este e-mail já está cadastrado no sistema.");
         });
 
-        // IMPORTANTE: Por enquanto salvamos a senha assim,
-        // mas em breve usaremos BCrypt para segurança.
+        // Criptografa a senha antes de salvar
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         UserEntity entity = mapper.toEntity(user);
         return mapper.toModel(repository.save(entity));
     }

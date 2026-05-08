@@ -43,7 +43,7 @@ public class ArtOrder {
         }
 
         // Valor da Moldura (usando a regra de perímetro real com cortes)
-        if (frame != null || frame.getPricePerMeter() == null) {
+        if (frame != null && frame.getPricePerMeter() == null) {
             Double neededMeters = frame.calculateNeededMeters(artworkHeightCm, artworkWidthCm);
             BigDecimal framePrice = frame.getPricePerMeter().multiply(BigDecimal.valueOf(neededMeters));
             total = total.add(framePrice);

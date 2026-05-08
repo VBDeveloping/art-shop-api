@@ -20,8 +20,10 @@ public class FrameEntity {
     private String code;
 
     private String name;
-
+    private String material;
+    private String color;
     private Double faceWidthCm;
+    private Double cuttingMarginCm;
 
     @Column(precision = 10, scale = 2)
     private BigDecimal pricePerMeter;
