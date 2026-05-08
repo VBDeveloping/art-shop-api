@@ -9,6 +9,12 @@ backend/mvnw.cmd
 *.jar
 *.war
 
+# --- Configurações de ambiente (nunca subir credenciais) ---
+backend/src/main/resources/application-local.properties
+backend/src/main/resources/application-*.properties
+!backend/src/main/resources/application.properties
+!backend/src/main/resources/application.properties.example
+
 # --- Angular (Frontend) ---
 # Ignora as dependências pesadas e cache do Angular
 frontend/node_modules/
