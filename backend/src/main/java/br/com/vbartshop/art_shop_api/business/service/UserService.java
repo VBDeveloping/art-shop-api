@@ -29,13 +29,12 @@ public class UserService {
 
     @Transactional
     public SystemUser save(SystemUser user) {
-        // Regra de Negócio: Verificar se o e-mail já existe
         repository.findByEmail(user.getEmail()).ifPresent(u -> {
             throw new RuntimeException("Este e-mail já está cadastrado no sistema.");
         });
 
-        // Criptografa a senha antes de salvar
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setActive(true);
 
         UserEntity entity = mapper.toEntity(user);
         return mapper.toModel(repository.save(entity));
