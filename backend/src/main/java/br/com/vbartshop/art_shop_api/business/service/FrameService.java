@@ -43,6 +43,19 @@ public class FrameService {
         return  mapper.toModel(repository.save(entity));
     }
 
+    @Transactional
+    public Frame addStock(Long id, Integer meters) {
+        FrameEntity entity = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Moldura não encontrada."));
+
+        if (meters <= 0) {
+            throw new RuntimeException("Quantidade deve ser maior que zero.");
+        }
+
+        entity.setStockMeters(entity.getStockMeters() + meters);
+        return mapper.toModel(repository.save(entity));
+    }
+
     // Regra de Negócio: Atualiza o estoque após uma venda
     @Transactional
     public void deductStock(Long frameId, Double meterUsed){

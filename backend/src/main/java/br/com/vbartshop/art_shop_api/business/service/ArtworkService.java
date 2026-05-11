@@ -6,6 +6,7 @@ import br.com.vbartshop.art_shop_api.infrastructure.mapper.ArtworkMapper;
 import br.com.vbartshop.art_shop_api.infrastructure.repository.ArtworkRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,18 @@ public class ArtworkService {
     private final ArtworkRepository repository;
     private final ArtworkMapper mapper;
 
+    @Transactional
+    public Artwork addStock(Long id, Integer quantity) {
+        ArtworkEntity entity = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Arte não encontrada."));
+
+        if (quantity <= 0) {
+            throw new RuntimeException("Quantidade deve ser maior que zero.");
+        }
+
+        entity.setStockQuantity(entity.getStockQuantity() + quantity);
+        return mapper.toModel(repository.save(entity));
+    }
     // O repository retorna Entity
     public List<Artwork> findAll() {
         return repository

@@ -36,6 +36,14 @@ public class FrameController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/{id}/add-stock")
+    public ResponseEntity<FrameResponseDTO> addStock(
+            @PathVariable Long id,
+            @RequestParam Integer meters) {
+        Frame updated = service.addStock(id, meters);
+        return ResponseEntity.ok(toResponse(updated));
+    }
+
     private Frame toModel(FrameRequestDTO dto) {
         return Frame.builder()
                 .code(dto.code()).name(dto.name()).material(dto.material())

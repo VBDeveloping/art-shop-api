@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/art-works")
+@RequestMapping("/api/art-works")
 @RequiredArgsConstructor
 public class ArtworkController {
 
@@ -30,6 +30,14 @@ public class ArtworkController {
                 .map(this::toResponse)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PatchMapping("/{id}/add-stock")
+    public ResponseEntity<ArtworkResponseDTO> addStock(
+            @PathVariable Long id,
+            @RequestParam Integer quantity) {
+        Artwork updated = service.addStock(id, quantity);
+        return ResponseEntity.ok(toResponse(updated));
     }
 
     @PostMapping
