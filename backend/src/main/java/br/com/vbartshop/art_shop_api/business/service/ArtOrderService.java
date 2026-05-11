@@ -3,6 +3,7 @@ package br.com.vbartshop.art_shop_api.business.service;
 import br.com.vbartshop.art_shop_api.business.model.ArtOrder;
 import br.com.vbartshop.art_shop_api.business.model.Artwork;
 import br.com.vbartshop.art_shop_api.business.model.Frame;
+import br.com.vbartshop.art_shop_api.business.model.enums.OrderStatus;
 import br.com.vbartshop.art_shop_api.infrastructure.entity.ArtOrderEntity;
 import br.com.vbartshop.art_shop_api.infrastructure.mapper.ArtOrderMapper;
 import br.com.vbartshop.art_shop_api.infrastructure.repository.ArtOrderRepository;
@@ -48,25 +49,33 @@ public class ArtOrderService {
 
         order.setArtwork(artwork);
         order.setFrame(frame);
-
         order.setOrderDate(LocalDateTime.now());
+        order.setStatus(OrderStatus.PENDING);
         order.calculateTotalValue();
 
         frameService.deductStock(frame.getId(), order.calculatePerimeterInMeters());
 
         ArtOrderEntity entity = mapper.toEntity(order);
-        ArtOrderEntity savedEntity = repository.save(entity);
+        return mapper.toModel(repository.save(entity));
+    }
 
-        return mapper.toModel(savedEntity);
+    @Transactional
+    public ArtOrder updateStatus(Long id, OrderStatus status) {
+        ArtOrderEntity entity = repository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Pedido não encontrado."));
+        entity.setStatus(status);
+        return mapper.toModel(repository.save(entity));
     }
 
     private void validateInput(ArtOrder order) {
-        if (order.getArtwork() == null || order.getArtwork().getId() == null) {
+        if (order.getArtwork() == null || order.getArtwork().getId() == null)
             throw new RuntimeException("O campo 'artwork' com um 'id' válido é obrigatório.");
-        }
-        if (order.getFrame() == null || order.getFrame().getId() == null) {
+        if (order.getFrame() == null || order.getFrame().getId() == null)
             throw new RuntimeException("O campo 'frame' com um 'id' válido é obrigatório.");
-        }
+        if (order.getCustomer() == null || order.getCustomer().getId() == null)
+            throw new RuntimeException("O campo 'customerId' é obrigatório.");
+        if (order.getDeliveryDate() == null)
+            throw new RuntimeException("O campo 'deliveryDate' é obrigatório.");
     }
 
     public Optional<ArtOrder> findById(Long id) {

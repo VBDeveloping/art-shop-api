@@ -1,11 +1,13 @@
 package br.com.vbartshop.art_shop_api.business.model;
 
+import br.com.vbartshop.art_shop_api.business.model.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -16,7 +18,10 @@ public class ArtOrder {
 
     private Long id;
     private LocalDateTime orderDate;
-    private SystemUser seller; // Quem realizou a venda
+    private LocalDate deliveryDate;
+    private OrderStatus status;
+    private SystemUser seller;
+    private Customer customer;
 
     // Dimensões da obra de arte (internas)
     private Double artworkHeightCm;

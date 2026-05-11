@@ -51,9 +51,21 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // Públicas
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/art-pieces/**").permitAll()
+                        // Admin
+                        .requestMatchers("/api/users/**").hasRole("ADMIN")
+                        // Seller - pedidos e clientes
+                        .requestMatchers("/api/art-orders/**").hasAnyRole("ADMIN", "SELLER")
+                        .requestMatchers("/api/customers/**").hasAnyRole("ADMIN", "SELLER")
+                        // Stock - produtos
+                        .requestMatchers("/api/art-works/**").hasAnyRole("ADMIN", "STOCK")
+                        .requestMatchers("/api/frames/**").hasAnyRole("ADMIN", "STOCK")
+                        .requestMatchers("/api/glasses/**").hasAnyRole("ADMIN", "STOCK")
+                        // Financial - pagamentos
+                        .requestMatchers("/api/payments/**").hasAnyRole("ADMIN", "FINANCIAL")
+
+                        // Qualquer outra rota autenticada
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
