@@ -1,0 +1,50 @@
+<div class="page">
+  <header class="header">
+    <h1>VB Art Shop</h1>
+    <nav class="nav">
+      <button class="btn-nav" (click)="navigate('/inventory/artworks')">Obras</button>
+      <button class="btn-nav" (click)="navigate('/inventory/frames')">Molduras</button>
+      <button class="btn-nav" (click)="navigate('/inventory/glasses')">Vidros</button>
+    </nav>
+    <div class="header-actions">
+      <button class="btn-primary" (click)="newOrder()">+ Novo Pedido</button>
+      <button class="btn-secondary" (click)="logout()">Sair</button>
+    </div>
+  </header>
+
+  <main class="content">
+    <h2>Pedidos</h2>
+
+    <div *ngIf="loading" class="state">Carregando...</div>
+    <div *ngIf="errorMessage" class="state error">{{ errorMessage }}</div>
+
+    <div *ngIf="!loading && orders.length === 0" class="state">
+      Nenhum pedido encontrado.
+    </div>
+
+    <table *ngIf="!loading && orders.length > 0">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Data</th>
+        <th>Arte</th>
+        <th>Moldura</th>
+        <th>Dimensões</th>
+        <th>Vendedor</th>
+        <th>Total</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let order of orders">
+        <td>{{ order.id }}</td>
+        <td>{{ order.orderDate | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ order.artwork.title }}</td>
+        <td>{{ order.frame.name }}</td>
+        <td>{{ order.artworkHeightCm }}cm x {{ order.artworkWidthCm }}cm</td>
+        <td>{{ order.seller.name }}</td>
+        <td>{{ order.totalValue | currency:'BRL' }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </main>
+</div>

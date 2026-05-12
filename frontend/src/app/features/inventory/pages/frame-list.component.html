@@ -1,0 +1,39 @@
+<div class="page">
+  <header class="header">
+    <h1>VB Art Shop</h1>
+    <button class="btn-secondary" (click)="back()">← Voltar</button>
+  </header>
+
+  <main class="content">
+    <h2>Molduras</h2>
+
+    <div *ngIf="loading" class="state">Carregando...</div>
+    <div *ngIf="errorMessage" class="state error">{{ errorMessage }}</div>
+    <div *ngIf="!loading && frames.length === 0" class="state">Nenhuma moldura cadastrada.</div>
+
+    <table *ngIf="!loading && frames.length > 0">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Código</th>
+        <th>Nome</th>
+        <th>Material</th>
+        <th>Cor</th>
+        <th>Preço/m</th>
+        <th>Estoque (m)</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let f of frames">
+        <td>{{ f.id }}</td>
+        <td>{{ f.code }}</td>
+        <td>{{ f.name }}</td>
+        <td>{{ f.material }}</td>
+        <td>{{ f.color }}</td>
+        <td>{{ f.pricePerMeter | currency:'BRL' }}</td>
+        <td>{{ f.stockMeters }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </main>
+</div>

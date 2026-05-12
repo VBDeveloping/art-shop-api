@@ -1,0 +1,33 @@
+<div class="page">
+  <header class="header">
+    <h1>VB Art Shop</h1>
+    <button class="btn-secondary" (click)="back()">← Voltar</button>
+  </header>
+
+  <main class="content">
+    <h2>Vidros</h2>
+
+    <div *ngIf="loading" class="state">Carregando...</div>
+    <div *ngIf="errorMessage" class="state error">{{ errorMessage }}</div>
+    <div *ngIf="!loading && glasses.length === 0" class="state">Nenhum vidro cadastrado.</div>
+
+    <table *ngIf="!loading && glasses.length > 0">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Tipo</th>
+        <th>Descrição</th>
+        <th>Preço/m²</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let g of glasses">
+        <td>{{ g.id }}</td>
+        <td>{{ g.type }}</td>
+        <td>{{ g.description }}</td>
+        <td>{{ g.pricePerSquareMeter | currency:'BRL' }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </main>
+</div>

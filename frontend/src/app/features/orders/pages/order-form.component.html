@@ -1,0 +1,115 @@
+<div class="page">
+  <header class="header">
+    <h1>VB Art Shop</h1>
+  </header>
+
+  <main class="content">
+    <div class="content-header">
+      <h2>Novo Pedido</h2>
+      <button class="btn-secondary" (click)="cancel()">← Voltar</button>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="form-card">
+
+      <div class="form-section">
+        <h3>Arte</h3>
+        <div class="field">
+          <label>Obra de Arte</label>
+          <select [(ngModel)]="order.artworkId" name="artworkId" required>
+            <option [value]="0" disabled>Selecione uma obra</option>
+            <option *ngFor="let a of artworks" [value]="a.id">
+              {{ a.title }} — {{ a.artist }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Dimensões</h3>
+        <div class="field-row">
+          <div class="field">
+            <label>Altura (cm)</label>
+            <input
+              type="number"
+              [(ngModel)]="order.artworkHeightCm"
+              name="artworkHeightCm"
+              placeholder="ex: 40"
+              required
+            />
+          </div>
+          <div class="field">
+            <label>Largura (cm)</label>
+            <input
+              type="number"
+              [(ngModel)]="order.artworkWidthCm"
+              name="artworkWidthCm"
+              placeholder="ex: 30"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Moldura</h3>
+        <div class="field">
+          <label>Moldura</label>
+          <select [(ngModel)]="order.frameId" name="frameId" required>
+            <option [value]="0" disabled>Selecione uma moldura</option>
+            <option *ngFor="let f of frames" [value]="f.id">
+              {{ f.name }} — {{ f.pricePerMeter | currency:'BRL' }}/m
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Vidro <span class="optional">(opcional)</span></h3>
+        <div class="field">
+          <label>Vidro</label>
+          <select [(ngModel)]="order.glassId" name="glassId">
+            <option [value]="undefined">Sem vidro</option>
+            <option *ngFor="let g of glasses" [value]="g.id">
+              {{ g.type }} — {{ g.pricePerSquareMeter | currency:'BRL' }}/m²
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Outras informações</h3>
+        <div class="field-row">
+          <div class="field">
+            <label>ID do Vendedor</label>
+            <input
+              type="number"
+              [(ngModel)]="order.sellerId"
+              name="sellerId"
+              placeholder="ex: 1"
+              required
+            />
+          </div>
+          <div class="field">
+            <label>Desconto (R$)</label>
+            <input
+              type="number"
+              [(ngModel)]="order.discountAmount"
+              name="discountAmount"
+              placeholder="ex: 10.00"
+            />
+          </div>
+        </div>
+      </div>
+
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="cancel()">Cancelar</button>
+        <button type="submit" class="btn-primary" [disabled]="loading">
+          {{ loading ? 'Salvando...' : 'Criar Pedido' }}
+        </button>
+      </div>
+
+    </form>
+  </main>
+</div>
