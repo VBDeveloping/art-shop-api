@@ -19,11 +19,14 @@ backend/src/main/resources/application-*.properties
 # Ignora as dependências pesadas e cache do Angular
 frontend/node_modules/
 frontend/.angular/
+frontend/build/
+
 # Ignora a pasta de build final do frontend
 frontend/dist/
 frontend/npm-debug.log*
 
 # --- IDEs (IntelliJ, VS Code, STS) ---
+.env
 .idea/
 backend/.idea/
 *.iml
