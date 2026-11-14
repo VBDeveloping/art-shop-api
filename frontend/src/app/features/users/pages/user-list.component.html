@@ -1,0 +1,84 @@
+<div class="page">
+  <header class="header">
+    <h1>VB Art Shop</h1>
+    <button class="btn-secondary" (click)="back()">← Voltar</button>
+  </header>
+
+  <main class="content">
+    <div class="content-header">
+      <h2>Usuários</h2>
+      <button class="btn-primary" (click)="showForm = !showForm">
+        {{ showForm ? 'Cancelar' : '+ Novo Usuário' }}
+      </button>
+    </div>
+
+    <!-- Formulário de criação -->
+    <div class="form-card" *ngIf="showForm">
+      <h3>Novo Usuário</h3>
+      <div class="field-row">
+        <div class="field">
+          <label>Nome</label>
+          <input type="text" [(ngModel)]="newUser.name" name="name" placeholder="Nome completo"/>
+        </div>
+        <div class="field">
+          <label>E-mail</label>
+          <input type="email" [(ngModel)]="newUser.email" name="email" placeholder="email@exemplo.com"/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Senha</label>
+          <input type="password" [(ngModel)]="newUser.password" name="password" placeholder="Senha inicial"/>
+        </div>
+        <div class="field">
+          <label>Perfil</label>
+          <select [(ngModel)]="newUser.role" name="role">
+            <option *ngFor="let r of roles" [value]="r">{{ roleLabels[r] }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" (click)="createUser()">Criar Usuário</button>
+      </div>
+    </div>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <div *ngIf="loading" class="state">Carregando...</div>
+    <div *ngIf="!loading && users.length === 0" class="state">Nenhum usuário cadastrado.</div>
+
+    <table *ngIf="!loading && users.length > 0">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>Perfil</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let u of users" [class.inactive]="!u.active">
+        <td>{{ u.id }}</td>
+        <td>{{ u.name }}</td>
+        <td>{{ u.email }}</td>
+        <td>
+            <span class="role-badge role-{{ u.role.toLowerCase() }}">
+              {{ roleLabels[u.role] }}
+            </span>
+        </td>
+        <td>
+            <span class="badge" [class.active]="u.active" [class.inactive-badge]="!u.active">
+              {{ u.active ? 'Ativo' : 'Inativo' }}
+            </span>
+        </td>
+        <td>
+          <button class="btn-action danger" (click)="toggleStatus(u.id)">
+            {{ u.active ? 'Desativar' : 'Ativar' }}
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </main>
+</div>

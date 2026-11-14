@@ -7,11 +7,13 @@ import { ArtworkService } from '../../../core/services/artwork.service';
 import { FrameService } from '../../../core/services/frame.service';
 import { GlassService } from '../../../core/services/glass.service';
 import { ArtworkResponse, FrameResponse, GlassResponse, ArtOrderRequest } from '../../../core/models/art-order.model';
+import { AppHeaderComponent } from '../../../shared/components/organisms/app-header/app-header.component';
+
 
 @Component({
   selector: 'app-order-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, CurrencyPipe],
+  imports: [CommonModule, FormsModule, CurrencyPipe, AppHeaderComponent],
   templateUrl: './order-form.component.html',
   styleUrl: './order-form.component.scss'
 })
@@ -26,8 +28,10 @@ export class OrderFormComponent implements OnInit {
     frameId: 0,
     glassId: undefined,
     sellerId: 0,
+    customerId: 0,
     artworkHeightCm: 0,
     artworkWidthCm: 0,
+    deliveryDate: '',
     discountAmount: undefined
   };
 

@@ -1,14 +1,43 @@
 <div class="page">
-  <header class="header">
-    <h1>VB Art Shop</h1>
-    <button class="btn-secondary" (click)="back()">← Voltar</button>
-  </header>
+  <app-header [showNav]="false" backRoute="/dashboard" backLabel="← Voltar"></app-header>
 
   <main class="content">
-    <h2>Vidros</h2>
+    <div class="content-header">
+      <h2>Vidros</h2>
+      <button class="btn-primary" *ngIf="userContext.isStock()" (click)="showForm = !showForm">
+        {{ showForm ? 'Cancelar' : '+ Novo Vidro' }}
+      </button>
+    </div>
 
+    <div class="form-card" *ngIf="showForm">
+      <h3>Novo Vidro</h3>
+      <div class="field-row">
+        <div class="field">
+          <label>Tipo *</label>
+          <input type="text" [(ngModel)]="newGlass.type" name="type" placeholder="Comum, Antirreflexo..."/>
+        </div>
+        <div class="field">
+          <label>Descrição</label>
+          <input type="text" [(ngModel)]="newGlass.description" name="description" placeholder="Descrição"/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Preço por m² (R$)</label>
+          <input type="number" [(ngModel)]="newGlass.pricePerSquareMeter" name="price" placeholder="45.00"/>
+        </div>
+        <div class="field">
+          <label>Folga técnica (cm)</label>
+          <input type="number" [(ngModel)]="newGlass.technicalGapCm" name="gap" placeholder="0.2"/>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" (click)="save()">Salvar</button>
+      </div>
+    </div>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
     <div *ngIf="loading" class="state">Carregando...</div>
-    <div *ngIf="errorMessage" class="state error">{{ errorMessage }}</div>
     <div *ngIf="!loading && glasses.length === 0" class="state">Nenhum vidro cadastrado.</div>
 
     <table *ngIf="!loading && glasses.length > 0">

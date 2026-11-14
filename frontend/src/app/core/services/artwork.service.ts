@@ -12,4 +12,12 @@ export class ArtworkService {
   findAll(): Observable<ArtworkResponse[]> {
     return this.http.get<ArtworkResponse[]>(this.API_URL);
   }
+
+  create(artwork: any): Observable<ArtworkResponse> {
+    return this.http.post<ArtworkResponse>(this.API_URL, artwork);
+  }
+
+  addStock(id: number, quantity: number): Observable<ArtworkResponse> {
+    return this.http.patch<ArtworkResponse>(`${this.API_URL}/${id}/add-stock?quantity=${quantity}`, {});
+  }
 }

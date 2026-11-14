@@ -1,0 +1,65 @@
+<div class="page">
+  <app-header [showNav]="true"></app-header>
+
+  <main class="content">
+    <div *ngIf="loading" class="state">Carregando...</div>
+
+    <ng-container *ngIf="!loading">
+
+      <!-- Cards de resumo -->
+      <div class="cards">
+        <div class="card">
+          <span class="card-label">Aguardando</span>
+          <span class="card-value">{{ pendingOrders.length }}</span>
+        </div>
+        <div class="card">
+          <span class="card-label">Em produção</span>
+          <span class="card-value">{{ inProgressOrders.length }}</span>
+        </div>
+        <div class="card">
+          <span class="card-label">Prontos</span>
+          <span class="card-value ready">{{ readyOrders.length }}</span>
+        </div>
+        <div class="card" *ngIf="userContext.isFinancial()">
+          <span class="card-label">Faturamento</span>
+          <span class="card-value">{{ totalRevenue | currency:'BRL' }}</span>
+        </div>
+      </div>
+
+      <!-- Alertas de prazo -->
+      <div class="section" *ngIf="urgentOrders.length > 0">
+        <h2>⚠️ Prazos próximos</h2>
+        <table>
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>Cliente</th>
+            <th>Arte</th>
+            <th>Prazo</th>
+            <th>Status</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let order of urgentOrders"
+              [class.urgent]="isUrgent(order)"
+              [class.warning]="isWarning(order)">
+            <td>{{ order.id }}</td>
+            <td>{{ order.customer?.name ?? '—' }}</td>
+            <td>{{ order.artwork?.title ?? '—' }}</td>
+            <td>{{ order.deliveryDate | date:'dd/MM/yyyy' }}</td>
+            <td>{{ order.status }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Ação rápida -->
+      <div class="quick-actions" *ngIf="userContext.isSeller()">
+        <button class="btn-primary" (click)="navigate('/attendance/new')">
+          + Novo Atendimento
+        </button>
+      </div>
+
+    </ng-container>
+  </main>
+</div>

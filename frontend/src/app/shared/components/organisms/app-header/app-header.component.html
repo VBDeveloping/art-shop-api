@@ -1,0 +1,35 @@
+<header class="header">
+  <button class="logo" (click)="goHome()">VB Art Shop</button>
+
+  <nav class="nav" *ngIf="showNav">
+    <button class="btn-nav" (click)="navigate('/orders')">Pedidos</button>
+    <button class="btn-nav" (click)="navigate('/customers')">Clientes</button>
+
+    <div class="dropdown" *ngIf="isStock()">
+      <button class="btn-nav" (click)="toggleDropdown()">Produtos ▾</button>
+      <div class="dropdown-menu" *ngIf="showDropdown">
+        <button (click)="navigate('/inventory/artworks')">Obras</button>
+        <button (click)="navigate('/inventory/frames')">Molduras</button>
+        <button (click)="navigate('/inventory/glasses')">Vidros</button>
+      </div>
+    </div>
+
+    <button class="btn-nav" *ngIf="isFinancial()" (click)="navigate('/financial')">
+      Financeiro
+    </button>
+    <button class="btn-nav admin" *ngIf="isAdmin()" (click)="navigate('/users')">
+      Configurações
+    </button>
+  </nav>
+
+  <button class="btn-secondary back" *ngIf="!showNav && backRoute" (click)="goBack()">
+    {{ backLabel }}
+  </button>
+
+  <div class="header-actions" *ngIf="showNav">
+    <span class="user-info">{{ currentUser?.name }}</span>
+    <button class="btn-secondary" (click)="logout()">Sair</button>
+  </div>
+</header>
+
+<div class="overlay" *ngIf="showDropdown" (click)="showDropdown = false"></div>

@@ -12,4 +12,12 @@ export class FrameService {
   findAll(): Observable<FrameResponse[]> {
     return this.http.get<FrameResponse[]>(this.API_URL);
   }
+
+  create(frame: any): Observable<FrameResponse> {
+    return this.http.post<FrameResponse>(this.API_URL, frame);
+  }
+
+  addStock(id: number, meters: number): Observable<FrameResponse> {
+    return this.http.patch<FrameResponse>(`${this.API_URL}/${id}/add-stock?meters=${meters}`, {});
+  }
 }

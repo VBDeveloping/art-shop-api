@@ -1,0 +1,46 @@
+<div class="page">
+  <app-header [showNav]="false" backRoute="/customers" backLabel="← Voltar"></app-header>
+
+  <main class="content">
+    <div class="content-header">
+      <h2>{{ isEditing ? 'Editar Cliente' : 'Novo Cliente' }}</h2>
+      <button class="btn-secondary" (click)="cancel()">← Voltar</button>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="form-card">
+      <div class="field">
+        <label>Nome</label>
+        <input type="text" [(ngModel)]="customer.name" name="name" required placeholder="Nome completo"/>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>E-mail</label>
+          <input type="email" [(ngModel)]="customer.email" name="email" placeholder="email@exemplo.com"/>
+        </div>
+        <div class="field">
+          <label>Telefone</label>
+          <input type="text" [(ngModel)]="customer.phone" name="phone" placeholder="81999999999"/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>CPF</label>
+          <input type="text" [(ngModel)]="customer.cpf" name="cpf" required placeholder="000.000.000-00"/>
+        </div>
+        <div class="field">
+          <label>Endereço</label>
+          <input type="text" [(ngModel)]="customer.address" name="address" placeholder="Rua, número - Cidade"/>
+        </div>
+      </div>
+
+      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" (click)="cancel()">Cancelar</button>
+        <button type="submit" class="btn-primary" [disabled]="loading">
+          {{ loading ? 'Salvando...' : (isEditing ? 'Salvar' : 'Cadastrar') }}
+        </button>
+      </div>
+    </form>
+  </main>
+</div>

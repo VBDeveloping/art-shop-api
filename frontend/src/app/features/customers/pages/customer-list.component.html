@@ -1,0 +1,74 @@
+<div class="page">
+  <app-header [showNav]="false" backRoute="/dashboard" backLabel="← Voltar"></app-header>
+
+
+  <main class="content">
+    <div class="content-header">
+      <h2>Clientes</h2>
+      <button class="btn-primary" (click)="newCustomer()">+ Novo Cliente</button>
+    </div>
+
+    <!-- Busca -->
+    <div class="search-box">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchInput()"
+        (keyup.enter)="search()"
+        placeholder="Buscar por nome, CPF, e-mail ou telefone..."
+        class="search-input"
+      />
+      <button class="btn-search" (click)="search()" [disabled]="!canSearch">
+        Buscar
+      </button>
+    </div>
+    <p class="search-hint" *ngIf="searchTerm.length > 0 && searchTerm.length < 3">
+      Digite ao menos 3 caracteres para buscar.
+    </p>
+
+    <!-- Estados -->
+    <div *ngIf="loading" class="state">Buscando...</div>
+    <div *ngIf="errorMessage" class="state error">{{ errorMessage }}</div>
+    <div *ngIf="!loading && searched && customers.length === 0" class="state">
+      Nenhum cliente encontrado para "{{ searchTerm }}".
+    </div>
+    <div *ngIf="!searched && !loading" class="state muted">
+      Use a busca acima para encontrar um cliente.
+    </div>
+
+    <!-- Tabela -->
+    <table *ngIf="!loading && customers.length > 0">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>Telefone</th>
+        <th>CPF</th>
+        <th>Status</th>
+        <th>Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let c of customers" [class.inactive]="!c.active">
+        <td>{{ c.id }}</td>
+        <td>{{ c.name }}</td>
+        <td>{{ c.email }}</td>
+        <td>{{ c.phone }}</td>
+        <td>{{ c.cpf }}</td>
+        <td>
+            <span class="badge" [class.active]="c.active" [class.inactive-badge]="!c.active">
+              {{ c.active ? 'Ativo' : 'Inativo' }}
+            </span>
+        </td>
+        <td class="actions">
+          <button class="btn-action" (click)="edit(c.id)">Editar</button>
+          <button class="btn-action danger" (click)="toggleStatus(c.id)">
+            {{ c.active ? 'Desativar' : 'Ativar' }}
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </main>
+</div>

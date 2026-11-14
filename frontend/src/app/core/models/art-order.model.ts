@@ -1,5 +1,6 @@
 import { ArtSource } from './artwork.model';
 import { UserRole } from './user.model';
+import { CustomerResponse } from './customer.model';
 
 export interface ArtworkResponse {
   id: number;
@@ -41,12 +42,15 @@ export interface UserResponse {
 export interface ArtOrderResponse {
   id: number;
   orderDate: string;
+  deliveryDate: string;
+  status: string;
   artworkHeightCm: number;
   artworkWidthCm: number;
-  artwork: ArtworkResponse;
-  frame: FrameResponse;
-  glass: GlassResponse;
-  seller: UserResponse;
+  artwork?: ArtworkResponse;
+  frame?: FrameResponse;
+  glass?: GlassResponse;
+  seller?: UserResponse;
+  customer?: CustomerResponse;
   discountAmount: number;
   totalValue: number;
 }
@@ -56,7 +60,9 @@ export interface ArtOrderRequest {
   frameId: number;
   glassId?: number;
   sellerId: number;
+  customerId: number;
   artworkHeightCm: number;
   artworkWidthCm: number;
+  deliveryDate: string;
   discountAmount?: number;
 }

@@ -1,0 +1,248 @@
+<div class="page">
+  <app-header [showNav]="false" [isAttendance]="true"></app-header>
+
+  <main class="content">
+    <h2>Novo Atendimento</h2>
+
+    <!-- Stepper -->
+    <div class="stepper">
+      <div class="step" [class.active]="currentStep >= 1" [class.done]="currentStep > 1">
+        <div class="step-number">1</div>
+        <span>Cliente</span>
+      </div>
+      <div class="step-line" [class.done]="currentStep > 1"></div>
+      <div class="step" [class.active]="currentStep >= 2" [class.done]="currentStep > 2">
+        <div class="step-number">2</div>
+        <span>Produto</span>
+      </div>
+      <div class="step-line" [class.done]="currentStep > 2"></div>
+      <div class="step" [class.active]="currentStep >= 3">
+        <div class="step-number">3</div>
+        <span>Faturamento</span>
+      </div>
+    </div>
+
+    <!-- Passo 1 — Cliente -->
+    <div class="step-content" *ngIf="currentStep === 1">
+      <div class="form-card">
+        <div class="toggle-row">
+          <button class="toggle-btn" [class.active]="!state.isNewCustomer" (click)="state.isNewCustomer = false">
+            Cliente existente
+          </button>
+          <button class="toggle-btn" [class.active]="state.isNewCustomer" (click)="state.isNewCustomer = true">
+            Novo cliente
+          </button>
+        </div>
+
+        <!-- Cliente existente -->
+        <ng-container *ngIf="!state.isNewCustomer">
+          <div class="field">
+            <label>Buscar cliente</label>
+            <input type="text" [(ngModel)]="customerSearch" name="search" placeholder="Nome, CPF ou e-mail"/>
+          </div>
+          <div class="customer-list">
+            <div class="customer-item"
+                 *ngFor="let c of filteredCustomers"
+                 [class.selected]="state.customer?.id === c.id"
+                 (click)="selectCustomer(c)">
+              <strong>{{ c.name }}</strong>
+              <span>{{ c.cpf }} • {{ c.phone }}</span>
+            </div>
+            <div class="state" *ngIf="filteredCustomers.length === 0">Nenhum cliente encontrado.</div>
+          </div>
+        </ng-container>
+
+        <!-- Novo cliente -->
+        <ng-container *ngIf="state.isNewCustomer">
+          <div class="field">
+            <label>Nome *</label>
+            <input type="text" [(ngModel)]="newCustomer.name" name="name" placeholder="Nome completo"/>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>CPF *</label>
+              <input type="text" [(ngModel)]="newCustomer.cpf" name="cpf" placeholder="000.000.000-00"/>
+            </div>
+            <div class="field">
+              <label>Telefone</label>
+              <input type="text" [(ngModel)]="newCustomer.phone" name="phone" placeholder="81999999999"/>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>E-mail</label>
+              <input type="email" [(ngModel)]="newCustomer.email" name="email" placeholder="email@exemplo.com"/>
+            </div>
+            <div class="field">
+              <label>Endereço</label>
+              <input type="text" [(ngModel)]="newCustomer.address" name="address" placeholder="Rua, número"/>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Passo 2 — Produto -->
+    <div class="step-content" *ngIf="currentStep === 2">
+      <div class="form-card">
+        <div class="form-section">
+          <h3>Arte</h3>
+          <div class="field">
+            <label>Obra de Arte</label>
+            <select [(ngModel)]="state.artworkId" name="artworkId">
+              <option [value]="null" disabled>Selecione uma obra</option>
+              <option *ngFor="let a of artworks" [value]="a.id">
+                {{ a.title }} — {{ a.artist }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Dimensões</h3>
+          <div class="field-row">
+            <div class="field">
+              <label>Altura (cm)</label>
+              <input type="number" [(ngModel)]="state.artworkHeightCm" name="height" placeholder="ex: 40"/>
+            </div>
+            <div class="field">
+              <label>Largura (cm)</label>
+              <input type="number" [(ngModel)]="state.artworkWidthCm" name="width" placeholder="ex: 30"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Moldura</h3>
+          <div class="field">
+            <select [(ngModel)]="state.frameId" name="frameId">
+              <option [value]="null" disabled>Selecione uma moldura</option>
+              <option *ngFor="let f of frames" [value]="f.id">
+                {{ f.name }} — {{ f.pricePerMeter | currency:'BRL' }}/m
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Vidro <span class="optional">(opcional)</span></h3>
+          <div class="field">
+            <select [(ngModel)]="state.glassId" name="glassId">
+              <option [value]="null">Sem vidro</option>
+              <option *ngFor="let g of glasses" [value]="g.id">
+                {{ g.type }} — {{ g.pricePerSquareMeter | currency:'BRL' }}/m²
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Entrega e desconto</h3>
+          <div class="field-row">
+            <div class="field">
+              <label>Prazo de entrega</label>
+              <input type="date" [(ngModel)]="state.deliveryDate" name="deliveryDate"/>
+            </div>
+            <div class="field">
+              <label>Desconto (R$)</label>
+              <input type="number" [(ngModel)]="state.discountAmount" name="discount" placeholder="0.00"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resumo estimado -->
+        <div class="summary">
+          <span>Total estimado:</span>
+          <strong>{{ estimatedTotal | currency:'BRL' }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Passo 3 — Faturamento -->
+    <div class="step-content" *ngIf="currentStep === 3">
+      <div class="form-card">
+
+        <!-- Resumo do pedido -->
+        <div class="order-summary">
+          <h3>Resumo do pedido</h3>
+          <div class="summary-row">
+            <span>Cliente</span>
+            <strong>{{ state.isNewCustomer ? newCustomer.name : state.customer?.name }}</strong>
+          </div>
+          <div class="summary-row">
+            <span>Arte</span>
+            <strong>{{ selectedArtwork?.title ?? '—' }} <span class="price" *ngIf="selectedArtwork">{{ selectedArtwork.price | currency:'BRL' }}</span></strong>
+          </div>
+          <div class="summary-row">
+            <span>Moldura</span>
+            <strong>{{ selectedFrame?.name ?? '—' }} <span class="price" *ngIf="selectedFrame">{{ selectedFrame.pricePerMeter | currency:'BRL' }}/m</span></strong>
+          </div>
+          <div class="summary-row" *ngIf="selectedGlass">
+            <span>Vidro</span>
+            <strong>{{ selectedGlass.type }}</strong>
+          </div>
+          <div class="summary-row">
+            <span>Dimensões</span>
+            <strong>{{ state.artworkHeightCm }}cm x {{ state.artworkWidthCm }}cm</strong>
+          </div>
+          <div class="summary-row">
+            <span>Prazo</span>
+            <strong>{{ state.deliveryDate }}</strong>
+          </div>
+          <div class="summary-row" *ngIf="state.discountAmount">
+            <span>Desconto</span>
+            <strong class="discount">- {{ state.discountAmount | currency:'BRL' }}</strong>
+          </div>
+          <div class="summary-row total">
+            <span>Total estimado</span>
+            <strong>{{ estimatedTotal | currency:'BRL' }}</strong>
+          </div>
+        </div>
+
+        <!-- Pagamento -->
+        <div class="form-section">
+          <h3>Pagamento</h3>
+          <div class="field">
+            <label>Forma de pagamento</label>
+            <select [(ngModel)]="state.paymentType" name="paymentType">
+              <option value="PIX">PIX</option>
+              <option value="CASH">Dinheiro</option>
+              <option value="CREDIT_CARD">Cartão de Crédito</option>
+              <option value="DEBIT_CARD">Cartão de Débito</option>
+            </select>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Valor pago (R$)</label>
+              <input type="number" [(ngModel)]="state.paymentAmount" name="paymentAmount" placeholder="0.00"/>
+            </div>
+            <div class="field">
+              <label>Observações</label>
+              <input type="text" [(ngModel)]="state.paymentNotes" name="notes" placeholder="Ex: 50% entrada"/>
+            </div>
+          </div>
+        </div>
+
+        <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+      </div>
+    </div>
+
+    <!-- Navegação -->
+    <div class="nav-actions">
+      <button class="btn-secondary" (click)="prevStep()" *ngIf="currentStep > 1">← Anterior</button>
+      <button class="btn-secondary" (click)="confirmCancel()" *ngIf="currentStep === 1">Cancelar</button>
+      <button class="btn-primary"
+              *ngIf="currentStep < totalSteps"
+              [disabled]="(currentStep === 1 && !canProceedStep1()) || (currentStep === 2 && !canProceedStep2())"
+              (click)="nextStep()">
+        Próximo →
+      </button>
+      <button class="btn-primary"
+              *ngIf="currentStep === totalSteps"
+              [disabled]="loading"
+              (click)="finish()">
+        {{ loading ? 'Finalizando...' : 'Finalizar Atendimento' }}
+      </button>
+    </div>
+  </main>
+</div>

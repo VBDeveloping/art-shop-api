@@ -1,14 +1,63 @@
 <div class="page">
-  <header class="header">
-    <h1>VB Art Shop</h1>
-    <button class="btn-secondary" (click)="back()">← Voltar</button>
-  </header>
+  <app-header [showNav]="false" backRoute="/dashboard" backLabel="← Voltar"></app-header>
 
   <main class="content">
-    <h2>Molduras</h2>
+    <div class="content-header">
+      <h2>Molduras</h2>
+      <button class="btn-primary" *ngIf="userContext.isStock()" (click)="showForm = !showForm">
+        {{ showForm ? 'Cancelar' : '+ Nova Moldura' }}
+      </button>
+    </div>
 
+    <div class="form-card" *ngIf="showForm">
+      <h3>Nova Moldura</h3>
+      <div class="field-row">
+        <div class="field">
+          <label>Código *</label>
+          <input type="text" [(ngModel)]="newFrame.code" name="code" placeholder="MLD-001"/>
+        </div>
+        <div class="field">
+          <label>Nome *</label>
+          <input type="text" [(ngModel)]="newFrame.name" name="name" placeholder="Moldura Clássica"/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Material</label>
+          <input type="text" [(ngModel)]="newFrame.material" name="material" placeholder="MDF, Madeira..."/>
+        </div>
+        <div class="field">
+          <label>Cor</label>
+          <input type="text" [(ngModel)]="newFrame.color" name="color" placeholder="Preto, Dourado..."/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Largura da face (cm)</label>
+          <input type="number" [(ngModel)]="newFrame.faceWidthCm" name="faceWidth" placeholder="3.5"/>
+        </div>
+        <div class="field">
+          <label>Margem de corte (cm)</label>
+          <input type="number" [(ngModel)]="newFrame.cuttingMarginCm" name="margin" placeholder="0.2"/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Preço por metro (R$)</label>
+          <input type="number" [(ngModel)]="newFrame.pricePerMeter" name="price" placeholder="25.90"/>
+        </div>
+        <div class="field">
+          <label>Estoque inicial (metros)</label>
+          <input type="number" [(ngModel)]="newFrame.stockMeters" name="stock" placeholder="50"/>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" (click)="save()">Salvar</button>
+      </div>
+    </div>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
     <div *ngIf="loading" class="state">Carregando...</div>
-    <div *ngIf="errorMessage" class="state error">{{ errorMessage }}</div>
     <div *ngIf="!loading && frames.length === 0" class="state">Nenhuma moldura cadastrada.</div>
 
     <table *ngIf="!loading && frames.length > 0">
@@ -21,6 +70,7 @@
         <th>Cor</th>
         <th>Preço/m</th>
         <th>Estoque (m)</th>
+        <th *ngIf="userContext.isStock()">Ações</th>
       </tr>
       </thead>
       <tbody>
@@ -32,6 +82,9 @@
         <td>{{ f.color }}</td>
         <td>{{ f.pricePerMeter | currency:'BRL' }}</td>
         <td>{{ f.stockMeters }}</td>
+        <td *ngIf="userContext.isStock()">
+          <button class="btn-action" (click)="addStock(f.id, 10)">+10m estoque</button>
+        </td>
       </tr>
       </tbody>
     </table>

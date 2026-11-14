@@ -7,4 +7,8 @@ export interface LoginResponse {
   token: string;
 }
 
-export type UserRole = 'ADMIN' | 'SALES_USER';
+export interface TokenPayload {
+  sub: string;
+  iat: number;
+  exp: number;
+}

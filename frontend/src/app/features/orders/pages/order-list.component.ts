@@ -4,11 +4,13 @@ import { Router } from '@angular/router';
 import { ArtOrderService } from '../../../core/services/art-order.service';
 import { ArtOrderResponse } from '../../../core/models/art-order.model';
 import { AuthService } from '../../../core/services/auth.service';
+import { AppHeaderComponent } from '../../../shared/components/organisms/app-header/app-header.component';
+
 
 @Component({
   selector: 'app-order-list',
   standalone: true,
-  imports: [CommonModule, CurrencyPipe, DatePipe],
+  imports: [CommonModule, CurrencyPipe, DatePipe, AppHeaderComponent],
   templateUrl: './order-list.component.html',
   styleUrl: './order-list.component.scss'
 })

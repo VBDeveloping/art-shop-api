@@ -1,14 +1,60 @@
 <div class="page">
-  <header class="header">
-    <h1>VB Art Shop</h1>
-    <button class="btn-secondary" (click)="back()">← Voltar</button>
-  </header>
+  <app-header [showNav]="false" backRoute="/dashboard" backLabel="← Voltar"></app-header>
 
   <main class="content">
-    <h2>Obras de Arte</h2>
+    <div class="content-header">
+      <h2>Obras de Arte</h2>
+      <button class="btn-primary" *ngIf="userContext.isStock()" (click)="showForm = !showForm">
+        {{ showForm ? 'Cancelar' : '+ Nova Obra' }}
+      </button>
+    </div>
 
+    <!-- Formulário -->
+    <div class="form-card" *ngIf="showForm">
+      <h3>Nova Obra</h3>
+      <div class="field-row">
+        <div class="field">
+          <label>Título *</label>
+          <input type="text" [(ngModel)]="newArtwork.title" name="title" placeholder="Título da obra"/>
+        </div>
+        <div class="field">
+          <label>Artista</label>
+          <input type="text" [(ngModel)]="newArtwork.artist" name="artist" placeholder="Nome do artista"/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Preço (R$)</label>
+          <input type="number" [(ngModel)]="newArtwork.price" name="price" placeholder="0.00"/>
+        </div>
+        <div class="field">
+          <label>Estoque inicial</label>
+          <input type="number" [(ngModel)]="newArtwork.stockQuantity" name="stock" placeholder="0"/>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Origem</label>
+          <select [(ngModel)]="newArtwork.source" name="source">
+            <option *ngFor="let s of sources" [value]="s.value">{{ s.label }}</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>URL da imagem</label>
+          <input type="text" [(ngModel)]="newArtwork.imageUrl" name="imageUrl" placeholder="https://..."/>
+        </div>
+      </div>
+      <div class="field">
+        <label>Descrição</label>
+        <input type="text" [(ngModel)]="newArtwork.description" name="description" placeholder="Descrição da obra"/>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" (click)="save()">Salvar</button>
+      </div>
+    </div>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
     <div *ngIf="loading" class="state">Carregando...</div>
-    <div *ngIf="errorMessage" class="state error">{{ errorMessage }}</div>
     <div *ngIf="!loading && artworks.length === 0" class="state">Nenhuma obra cadastrada.</div>
 
     <table *ngIf="!loading && artworks.length > 0">
@@ -20,6 +66,7 @@
         <th>Preço</th>
         <th>Estoque</th>
         <th>Origem</th>
+        <th *ngIf="userContext.isStock()">Ações</th>
       </tr>
       </thead>
       <tbody>
@@ -30,6 +77,9 @@
         <td>{{ a.price | currency:'BRL' }}</td>
         <td>{{ a.stockQuantity }}</td>
         <td>{{ a.source }}</td>
+        <td *ngIf="userContext.isStock()">
+          <button class="btn-action" (click)="addStock(a.id, 1)">+1 estoque</button>
+        </td>
       </tr>
       </tbody>
     </table>

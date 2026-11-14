@@ -12,4 +12,8 @@ export class GlassService {
   findAll(): Observable<GlassResponse[]> {
     return this.http.get<GlassResponse[]>(this.API_URL);
   }
+
+  create(glass: any): Observable<GlassResponse> {
+    return this.http.post<GlassResponse>(this.API_URL, glass);
+  }
 }

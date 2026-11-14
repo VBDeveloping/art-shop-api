@@ -1,0 +1,87 @@
+<app-header [showNav]="false" backRoute="/dashboard" backLabel="← Voltar"></app-header>
+
+<main class="content">
+  <h2>Financeiro</h2>
+
+  <!-- Atalhos de período -->
+  <div class="shortcuts">
+    <button class="btn-shortcut" *ngFor="let s of shortcuts" (click)="applyShortcut(s.days)">
+      {{ s.label }}
+    </button>
+  </div>
+
+  <!-- Filtro de período -->
+  <div class="filter-box">
+    <div class="field">
+      <label>De</label>
+      <input type="date" [(ngModel)]="fromDate" name="from"/>
+    </div>
+    <div class="field">
+      <label>Até</label>
+      <input type="date" [(ngModel)]="toDate" name="to"/>
+    </div>
+    <button class="btn-primary" (click)="search()">Buscar</button>
+  </div>
+
+  <div *ngIf="loading" class="state">Carregando...</div>
+  <div *ngIf="errorMessage" class="state error">{{ errorMessage }}</div>
+
+  <ng-container *ngIf="summary">
+
+    <!-- Cards de resumo -->
+    <div class="cards">
+      <div class="card">
+        <span class="card-label">Total de pedidos</span>
+        <span class="card-value">{{ summary.totalOrders }}</span>
+      </div>
+      <div class="card highlight">
+        <span class="card-label">Faturamento total</span>
+        <span class="card-value">{{ summary.totalRevenue | currency:'BRL' }}</span>
+      </div>
+      <div class="card">
+        <span class="card-label">Ticket médio</span>
+        <span class="card-value">{{ summary.averageOrderValue | currency:'BRL' }}</span>
+      </div>
+    </div>
+
+    <!-- Sem resultados -->
+    <div *ngIf="summary.orders.length === 0" class="state">
+      Nenhum pedido encontrado no período selecionado.
+    </div>
+
+    <!-- Tabela de pedidos -->
+    <table *ngIf="summary.orders.length > 0">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>Data</th>
+        <th>Cliente</th>
+        <th>Vendedor</th>
+        <th>Status</th>
+        <th>Total</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let o of summary.orders">
+        <td>{{ o.id }}</td>
+        <td>{{ o.orderDate | date:'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ o.customer?.name ?? '—' }}</td>
+        <td>{{ o.seller?.name ?? '—' }}</td>
+        <td>
+            <span class="status-badge status-{{ o.status.toLowerCase() }}">
+              {{ statusLabels[o.status] }}
+            </span>
+        </td>
+        <td class="amount">{{ o.totalValue | currency:'BRL' }}</td>
+      </tr>
+      </tbody>
+      <tfoot>
+      <tr>
+        <td colspan="5" class="total-label">Total do período</td>
+        <td class="amount total">{{ summary.totalRevenue | currency:'BRL' }}</td>
+      </tr>
+      </tfoot>
+    </table>
+
+  </ng-container>
+</main>
